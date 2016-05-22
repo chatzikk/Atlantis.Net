@@ -1,0 +1,161 @@
+﻿18/11/2015
+CustomerRemarks:
+ALTER TABLE CustomerRemarks
+	Add RemarkType tinyint
+
+
+29/10/2015
+ALTER TABLE ProdCategories
+	Add CategoryType tinyint
+
+ALTER TABLE ProdCategories
+  RENAME TO Categories;
+
+
+/****** Object:  Table [dbo].[ProductCategories]    Script Date: 29/10/2015 10:42:07 πμ ******/
+CREATE TABLE [dbo].[ProductCategories](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ProdId] [int] NULL,
+	[CategoryId] [int] NULL,
+ CONSTRAINT [PK_ProductCategories] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+22/10/2015
+ALTER TABLE ProductResources
+	Add StartInterval smallint
+
+ALTER TABLE ProductResources
+	Add BreakAfter smallint
+
+
+ChangeView
+SELECT        DA1.DAId, DA1.CuFlId, DA1.DADate, DA1.DATotalAppointments, DA1.DATotalScheduled, DA1.DATotalToBeCharged, DA1.DATotalCharged, DA1.DACheckInTime, DA1.DACheckOutTime, DA1.DACheckInStatus, 
+                         DA1.DAStatus, CF1.CustId, IND1.IndvSurname, IND1.IndvName, IND1.IndvFather, IND1.IndvPhone1, IND1.IndvPhone2, IND1.IndvMobilePhone, SC1.TriggerId, SC1.RescId AS LeaderId, 
+                         R1.RescDescr AS LeaderDescr, SC1.ContactDate, SC1.StartTime AS ContactTime, SC1.SCTypeId, CF1.CuFlAlias, DA1.DAPriorityLevel, CF1.CuFlNotes,
+                             (SELECT        SUM(CFP2.CFPrQuantity * CFP2.CFPrPrice - CFP2.CFPrDiscountValue - CFP2.CFPrTotalPaid) AS PayoutBalance
+                               FROM            dbo.CuFlProducts AS CFP2 INNER JOIN
+                                                         dbo.Products AS PRD2 ON CFP2.ProdId = PRD2.ProdID LEFT OUTER JOIN
+                                                         dbo.SaleTypes AS ST2 ON CFP2.SaleTypeId = ST2.ID
+                               WHERE        (CFP2.CFPrState >= 5) AND (ST2.IsMaison = 0) AND (CFP2.CuFlId = CF1.CuFlId) AND (PRD2.ProdType <> 3)
+                               GROUP BY CFP2.CuFlId) AS PayoutBalance, SC1.Notes AS SCNotes, CF1.CuFlType,
+                             (SELECT        MIN(RPlStartTimeSerial) AS minStartTimeSerial
+                               FROM            dbo.ReservationPlan AS RP1
+                               GROUP BY CuFlId, RPlDate
+                               HAVING         (RPlDate = DA1.DADate) AND (CuFlId = DA1.CuFlId)) AS minStartTimeSerial
+FROM            dbo.Resources AS R1 INNER JOIN
+                         dbo.SaleContacts AS SC1 ON R1.RescID = SC1.RescId RIGHT OUTER JOIN
+                         dbo.CustFolders AS CF1 INNER JOIN
+                         dbo.CustDailyActivity AS DA1 ON CF1.CuFlId = DA1.CuFlId INNER JOIN
+                         dbo.Individuals AS IND1 ON CF1.CustId = IND1.CustId ON SC1.CustId = IND1.CustId
+WHERE        (DA1.DATotalAppointments > 0)
+
+30/9/2015
+WorkingPeriods Id --> Identity
+
+ALTER TABLE ResourceWorkingSchedule
+	Add OccupiedTime int
+
+ALTER TABLE ResourceWorkingSchedule
+	Add Revenue float
+
+
+
+23/9/2015
+ALTER TABLE ResourceWorkingPeriods
+	Add IsActivated Bit;
+
+
+ALTER VIEW v_ResourceWorkingPeriods
+AS
+SELECT        dbo.ResourceWorkingPeriods.Id, dbo.ResourceWorkingPeriods.WorkingPeriodId, dbo.ResourceWorkingPeriods.RescId, dbo.Resources.RescAlias, dbo.Resources.RescDescr, dbo.Resources.RescStartTime, 
+                         dbo.Resources.RescEndTime, dbo.Resources.RescMaxOccupancy, dbo.Resources.RescMinTimeUnit, dbo.Resources.RsTpID, dbo.Resources.HasAvl, dbo.ResourceWorkingPeriods.TotalActiveMinutes, 
+                         dbo.ResourceWorkingPeriods.TotalBlockedMinutes, dbo.ResourceWorkingPeriods.IsActivated
+FROM            dbo.ResourceWorkingPeriods INNER JOIN
+                         dbo.Resources ON dbo.ResourceWorkingPeriods.RescId = dbo.Resources.RescID
+
+
+
+------------------------------------------------------
+ALTER TABLE PaymentTypes
+	Add IsActive Bit;
+
+Alter View v_Charges
+AS
+SELECT        CHRG1.ChrgID, CHRG1.ChrgDate, CHRG1.ChrgTime, CHRG1.ChrgIssuedDate, CHRG1.ChrgIssuedTime, CHRG1.UserId, CHRG1.ChrgQuantity, CHRG1.ProdId, PRD2.ProdDescr, PRD2.ProdType, CHRG1.ChrgVAT, 
+                         CHRG1.ChrgDiscount, CHRG1.ChrgIntPayerId, CHRG1.ChrgArr, INDV1.IndvSurname, INDV1.IndvName, CHRG1.InvID, CHRG1.ParId, CHRG1.ChrgSaleTypeId, ST1.Description, CHRG1.ChrgDeptId, 
+                         CHRG1.ChrgPaymentTypeId, PT1.Description AS PaymentTypeDescr, CHRG1.ChrgAccDeptId, CHRG1.ChrgState, CHRG1.ChrgType, CHRG1.ChrgPrice, CHRG1.ChrgConCuFlId, CF1.CustId, CHRG1.CFPrId, 
+                         CFP1.LeaderId, RESC1.RescDescr, ST1.IsMaison AS IsMaisonDebit, PT1.IsMaison AS IsMaisonCredit, INDV1.IndvPhone1, INDV1.IndvPhone2, INDV1.IndvMobilePhone, PRD1.ProdDescr AS CuFlProdDescr, 
+                         CF1.CuFlType,
+                             (SELECT        SUM(CFP2.CFPrQuantity * CFP2.CFPrPrice - CFP2.CFPrDiscountValue - CFP2.CFPrTotalPaid) AS PayoutBalance
+                               FROM            dbo.CuFlProducts AS CFP2 INNER JOIN
+                                                         dbo.Products AS PRD2 ON CFP2.ProdId = PRD2.ProdID LEFT OUTER JOIN
+                                                         dbo.SaleTypes AS ST2 ON CFP2.SaleTypeId = ST2.ID
+                               WHERE        (CFP2.CFPrState >= 5) AND (ST2.IsMaison = 0) AND (CFP2.CuFlId = CF1.CuFlId) AND (PRD2.ProdType <> 3)
+                               GROUP BY CFP2.CuFlId) AS PayoutBalance, CF1.CuFlAlias, PRD2.ProdDuration, CHRG1.ProdType AS ChrgProdType, MONTH(CHRG1.ChrgDate) AS ChrgMonth, YEAR(CHRG1.ChrgDate) AS ChrgYear, 
+                         CFP1.CFPrCreationDate, MONTH(CFP1.CFPrCreationDate) AS CfprCreationMonth, YEAR(CFP1.CFPrCreationDate) AS CfprCreationYear, PRD1.RescID AS ProdDeptId, ORG1.Description AS ProdDeptDescr, 
+                         PRD1.ProdType AS CFPrProdType, CHRG1.ChrgDiscountValue, CFP1.SCListId, dbo.SaleContactLists.CampaignId, dbo.POS.Description AS DeptDescr, CF1.HtlAlias
+FROM            dbo.OrganizationChart AS ORG1 RIGHT OUTER JOIN
+                         dbo.Products AS PRD1 ON ORG1.Id = PRD1.RescID RIGHT OUTER JOIN
+                         dbo.CuFlProducts AS CFP1 LEFT OUTER JOIN
+                         dbo.SaleContactLists ON CFP1.SCListId = dbo.SaleContactLists.Id RIGHT OUTER JOIN
+                         dbo.POS RIGHT OUTER JOIN
+                         dbo.CustFolders AS CF1 INNER JOIN
+                         dbo.Charges AS CHRG1 ON CF1.CuFlId = CHRG1.ChrgConCuFlId ON dbo.POS.Id = CHRG1.ChrgDeptId ON CFP1.CFPrId = CHRG1.CFPrId ON PRD1.ProdID = CFP1.ProdId LEFT OUTER JOIN
+                         dbo.Resources AS RESC1 ON CFP1.LeaderId = RESC1.RescID LEFT OUTER JOIN
+                         dbo.Individuals AS INDV1 ON CF1.CustId = INDV1.CustId LEFT OUTER JOIN
+                         dbo.PaymentTypes AS PT1 ON CHRG1.ChrgPaymentTypeId = PT1.Id LEFT OUTER JOIN
+                         dbo.SaleTypes AS ST1 ON CHRG1.ChrgSaleTypeId = ST1.ID LEFT OUTER JOIN
+                         dbo.Products AS PRD2 ON CHRG1.ProdId = PRD2.ProdID
+
+
+ALTER TABLE [dbo].[Hosts]
+    ADD [IsActive]        BIT      NULL;
+
+	ALTER TABLE [dbo].[Users]
+    ADD [FullName]        Varchar(150)      NULL;
+
+
+ALTER VIEW [dbo].[v_Users]
+AS
+SELECT        dbo.Users.UserName, dbo.Users.UserPassword, dbo.Users.RescId, dbo.Users.GroupId, dbo.Users.ICode, dbo.Users.PasswordValidationPeriod, dbo.Users.PasswordExpirationDate, 
+                         dbo.Users.PasswordMinLenght, dbo.Users.PasswordStrictFormat, dbo.Resources.RescParent AS DeptId, dbo.OrganizationChart.SupervisorRescId, dbo.Resources.RescDescr, dbo.Users.IsActive, 
+                         dbo.Users.FullName
+FROM            dbo.OrganizationChart RIGHT OUTER JOIN
+                         dbo.Resources ON dbo.OrganizationChart.Id = dbo.Resources.RescParent RIGHT OUTER JOIN
+                         dbo.Users ON dbo.Resources.RescID = dbo.Users.RescId
+
+InvoiceItems
+ChangeField VATPercent real-->float
+			DFPercent real -->float
+			PayoutValueDiscountPercent --> float
+			NetValueDiscountPercent --> float
+
+
+Change View v_ReservationPlan
+	add field CuFlType from CustFolders
+
+
+ALTER TABLE SaleTypes
+	ADD [DefaultRetailDocId] INT;
+
+ChangeView v_ReservationPlan
+	add field Resc1BackColor
+	add field Resc2BackColor
+	add field Resc3BackColor
+
+getRolesforAction(AuthorizationActions,enumObjects.Customer); 
+    public enum AuthorizationActions
+    {
+        WriteProperty = 0,
+        ReadProperty = 1,
+        ExecuteMethod = 2,
+        CreateObject = 3,
+        GetObject = 4,
+        EditObject = 5,
+        DeleteObject = 6,
+    }

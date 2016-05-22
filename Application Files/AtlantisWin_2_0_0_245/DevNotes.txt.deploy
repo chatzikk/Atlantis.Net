@@ -1,0 +1,332 @@
+﻿		Save in collection
+//[Transactional(TransactionalTypes.TransactionScope)]
+        //protected override void DataPortal_Update()
+        //{
+        //    // TODO: open database, update values
+        //    using (var ctx = ConnectionManager<SqlConnection>.GetManager(Common.CUtils.GetConnectionString("SalesManagerDB"), false))
+        //    {
+        //        base.Child_Update();
+        //    }
+        //}
+
+
+
+        <add name="SecurityDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="PersonDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="CommonDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="FinancialDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="SalesManagerDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="ProductsDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="ResourcesDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="SchedulingDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="ViewsDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="MetadataDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+        <add name="CampaignsDB" connectionString="Data Source=Server\Models1;Initial Catalog=Aegeo; MultipleActiveResultSets=true; User Id=sm; Password=;"
+            providerName="sqloledb" />
+
+
+
+
+
+SearchLookUpEdit  ==> An editor that provides lookup functionality using a dropdown GridControl control, and contains the Find edit box, allowing end-users 
+					  to quickly filter dropdown rows
+GridLookUpEdit  ==> uses an embedded GridControl control. The settings of the chosen view can be accessed via the RepositoryItemGridLookUpEditBase.View property. 
+
+*To set up dropdown columns at design time, use the XtraGrid's designer which can be invoked for the RepositoryItemGridLookUpEditBase.View property in 
+the Properties window. To specify columns at runtime, use the ColumnView.Columns property of the View that is specified by the RepositoryItemGridLookUpEditBase.View 
+property.* 
+*The RepositoryItemSearchLookUpEdit class contains settings specific to the SearchLookUpEdit control. You can access these settings via the editor's 
+SearchLookUpEdit.Properties object.*	
+
+LookUpEdit:
+*A list of rows displayed in the dropdown is specified by the RepositoryItemLookUpEditBase.DataSource property. You can set the data source to any object that 
+implements the System.Collections.IList, System.ComponentModel.ITypedList or System.ComponentModel.IListSource interface (an array or collection of class objects, 
+System.Data.DataView, System.Data.DataTable, etc). Dropdown rows correspond to list items. For instance, if the data source represents a System.Data.DataView object,
+dropdown rows correspond to rows of the data view. If the data source is an array, dropdown rows correspond to the elements of the array.*
+To add columns to display in the dropdown, you can use the RepositoryItemLookUpEdit.Columns property.
+
+            CPeriodRanges objPeriodRanges = CPeriodRanges.GetPeriodRanges();
+            CPeriodRangesBindingSource.DataSource = objPeriodRanges;
+            objActivePeriodRange = CPeriodRange.NewPeriodRange();
+            CPeriodRangeBindingSource.DataSource = objActivePeriodRange;
+
+GridHitInfo info = view.CalcHitInfo(pt);   //Returns information about VIEW	 elements located at a specified point
+
+When the end-user selects a value from the dropdown window, the object corresponding to the selected item is assigned to SelectedItem. 
+The difference between EditValue and SelectedItem is that [EditValue] can accept any value while [SelectedItem] can be set only to an object existing in the item 
+collection. 
+The text displayed in the control's edit box is the textual representation of the edit value. 
+
+cboContactTypes.Properties.DataSource = objSaleContactTypes;    //CSaleContactTypes objSaleContactTypes = CSaleContactTypes.GetSaleContactTypes();
+cboContactTypes.Properties.DisplayMember = "Description";
+cboContactTypes.Properties.ValueMember = "Id";
+
+this.Load += new System.EventHandler(this.frmSaleContactsX_Load);
+
+        private void RefreshActiveContact()
+        {
+            CSaleContactBindingSource.DataSource = objActiveSaleContact;
+            [txtSCState.EditValue = objActiveSaleContact.StateAlias;]
+            cboLastUpdateUserId.EditValue = objActiveSaleContact.LastUpdateUserId;
+        }
+
+
+
+[Serializable] 
+public class DataUpdateUow : CommandBase<DataUpdateUow> 
+{
+	public static PropertyInfo<CustomerEdit> CustomerEditProperty = RegisterProperty<CustomerEdit>(c => c.CustomerEdit); 
+	public CustomerEdit CustomerEdit 
+	{ 
+	get { return ReadProperty(CustomerEditProperty); } 
+	private set { LoadProperty(CustomerEditProperty, value); } 
+	} 
+		 
+	public static PropertyInfo<SalesOrderEdit> SalesOrderEditProperty = RegisterProperty<SalesOrderEdit>(c => c.SalesOrderEdit); 
+	public SalesOrderEdit SalesOrderEdit 
+	{ 
+	get { return ReadProperty(SalesOrderEditProperty); } 
+	private set { LoadProperty(SalesOrderEditProperty, value);} 
+	} 
+		 
+#if !SILVERLIGHT 
+	
+	public static DataUpdateUow Update(CustomerEdit customer, SalesOrderEdit order) 
+	{ 
+	var cmd = new DataUpdateUow { CustomerEdit = customer, SalesOrderEdit = order }; 
+	cmd = DataPortal.Execute<DataUpdateUow>(cmd); return cmd; 
+	} 
+			
+#endif 
+		 
+	public static void Update(CustomerEdit customer, SalesOrderEdit order, EventHandler<DataPortalResult<DataUpdateUow>> callback) 
+	{ 
+	var cmd = new DataUpdateUow { CustomerEdit = customer, SalesOrderEdit = order }; 
+	DataPortal.BeginExecute<DataUpdateUow>(cmd, callback);
+	}
+
+#if !SILVERLIGHT 
+
+		[Transactional(TransactionalTypes.TransactionScope)] 
+		private void DataPortal_Execute() 
+		{
+		CustomerEdit = CustomerEdit.Save(); 
+		SalesOrderEdit = SalesOrderEdit.Save(); 
+		}  
+
+#endif
+
+
+CIndividualBindingSource - Surname						SqlCeConnection --> ADO.NET connection object.	
+														The ConnectionManager class is designed to enable the reuse of standard ADO.NET connection objects.
+														MultipleActiveResultSets=true  -->  for multiple concurrent open DataReaders.
+
+CIndividualBindingSource - Phone1
+dateEditFirstEdit  --  Ημερομηνία Δημιουργίας:
+dateEditLastUpdate  --  Ημερομηνία Τελευταίας Μεταβολής:
+Creator  --  Δημιουργός:
+LastUpdateUserIdlookUp  --  Χρήστης Τελευταίας Μεταβολής:
+stateEdit  --  Κατάσταση:
+
+http://www.lhotka.net/cslabugs/svn_view.aspx?bugid=91&rev=2417&path=%2Ftrunk%2Fcslalightcs%2FCsla%2FCore%2FBusinessBase.cs
+
+
+cboActiveContactType
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Report: Contract
+Formula Fields
+
+{Bookings.BknID} = {?lBKGId} and
+{CuFlProducts.CFPrState} > 0.00 and
+{CuFlProducts.SaleTypeId} <> 2.00
+
+Report: Contract
+SubReport: CreditPlan
+Formula Fields
+
+{CFCreditPlan.PaymentDate} >= CurrentDate and
+{CFCreditPlan.CFId} = {?Pm-CFCreditPlan.CFId??01}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    void datagrid_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+    {
+        if (e.KeyCode == System.Windows.Forms.Keys.V && e.Control)
+        {
+            string data = Clipboard.GetData(DataFormats.Text).ToString();
+            string[] cells = data.Split('\t');
+            for (int i = 0; i < cells.Length; i++)
+                datagrid[datagrid.CurrentRowIndex, i] = cells[i];
+        }
+    }
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+try
+			{
+				string s = Clipboard.GetText();
+				string[] lines = s.Split('\n');
+				int iFail = 0, iRow = grdVariable.CurrentCell.RowIndex;
+				int iCol = grdVariable.CurrentCell.ColumnIndex;
+				DataGridViewCell oCell;
+				int flag=1;
+				foreach (string line in lines)
+				{
+					
+					if (iRow < grdVariable.RowCount && line.Length > 0)
+					{
+						string[] sCells = line.Split('\t');
+						for (int i = 0; i < sCells.GetLength(0); ++i)
+						{
+							if (iCol + i < this.grdVariable.ColumnCount)
+							{
+								oCell = grdVariable[iCol + i, iRow];
+								if (!oCell.ReadOnly)
+								{
+									if (oCell.Value == null) oCell.Value = "";
+									//if (flag % 2 == 0 && i == sCells.GetLength(0) - 1) sCells[i] = sCells[i].Substring(0, sCells.Length - 1);
+									if (oCell.Value.ToString() != sCells[i])
+									{
+										oCell.Value = Convert.ChangeType(sCells[i], oCell.ValueType);										
+									}
+									else
+										iFail++;//only traps a fail if the data has changed and you are pasting into a read only cell
+								}
+							}
+							else
+							{ break; }
+						}
+						iRow++;
+					}
+					else
+					{ break; }
+					if (iFail > 0)
+						MessageBox.Show(string.Format("{0} updates failed due to read only column setting", iFail));
+					flag++;
+				}
+			}
+			catch (FormatException)
+			{
+				MessageBox.Show("The data you pasted is in the wrong format for the cell");
+				return;
+			}
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+DataViewBase.SelectAll  -->  Selects all rows within a View.
+
+GridViewBase.ClearSelection  -->  Unselects any selected rows within a View.
+
+GridViewBase.SelectRange --> Selects multiple rows, while preserving the current selection (if any).
+
+GridViewBase.SelectRow  -->  Selects the specified row.
+
+GridViewBase.UnselectRow  -->  Unselects the specified row.
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+private void pasteMenuItem_Click(object sender, EventArgs e)
+        {
+            string[] data = ClipboardData.Split('\n');
+            if (data.Length < 1) return;
+            foreach (string row in data)
+            {
+                AddRow(row);
+            }
+        }
+
+        DataTable tbl = new DataTable();
+        private void AddRow(string data)
+        {
+            if (data == string.Empty) return;
+            string[] rowData = data.Split(new char[] { '\r', '\x09' });
+            DataRow newRow = tbl.NewRow();
+            for (int i = 0; i < rowData.Length; i++)
+            {
+                if (i >= tbl.Columns.Count) break;
+                newRow[i] = rowData[i];
+                if (i >= gridView1.Columns.Count) break;
+                //DataRow row = gridView1.GetFocusedRow() as DataRow;
+				row[i] = rowData[i];
+            
+                //CIndividualView obj = gridView1.GetFocusedRow() as CIndividualView;
+                //obj.Id = int.Parse(rowData[0]);
+                //obj.Surname = rowData[1];
+                //obj.Name = rowData[2];
+                //customerList.Add(obj);
+            }
+            tbl.Rows.Add(newRow);
+        }
+
+        private void copyToClipboardMenuItem_Click(object sender, EventArgs e)
+        {
+            gridView1.CopyToClipboard();
+        }
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+            for (int i = 0; i <= activeSaleDoc.ProductLines.Count - 1; i++)
+            {
+                if (activeSaleDoc.ProductLines[i].ProductType == ProductType.PT_THERAPY)
+                {
+                    nestedContractDoc.ProductLines.AddNew();
+
+                    nestedContractDoc.ProductLines[i].ParentId = activeSaleDoc.Id;
+                    nestedContractDoc.ProductLines[i].ProductType = activeSaleDoc.ProductLines[i].ProductType;
+                    nestedContractDoc.ProductLines[i].PriceListId = activeSaleDoc.ProductLines[i].PriceListId;
+                    nestedContractDoc.ProductLines[i].ProductId = activeSaleDoc.ProductLines[i].ProductId;
+                    nestedContractDoc.ProductLines[i].SaleTypeId = activeSaleDoc.ProductLines[i].SaleTypeId;
+                    nestedContractDoc.ProductLines[i].Quantity = activeSaleDoc.ProductLines[i].Quantity;
+                    nestedContractDoc.ProductLines[i].Price = activeSaleDoc.ProductLines[i].Price;
+                    nestedContractDoc.ProductLines[i].DiscountPercent = (float)activeSaleDoc.ProductLines[i].DiscountPercent;
+                    nestedContractDoc.ProductLines[i].DiscountValue = activeSaleDoc.ProductLines[i].DiscountValue;
+                    nestedContractDoc.ProductLines[i].TotalPrice = activeSaleDoc.ProductLines[i].TotalPrice;
+                    nestedContractDoc.ProductLines[i].PayoutValue = activeSaleDoc.ProductLines[i].PayoutValue;
+                    nestedContractDoc.ProductLines[i].IsMaison = activeSaleDoc.ProductLines[i].IsMaison;
+                    nestedContractDoc.ProductLines[i].Notes = activeSaleDoc.ProductLines[i].Notes;
+
+                    nestedContractDoc.ProductLines.Add(nestedContractDoc.ProductLines[i]);
+                }
+                else if (activeSaleDoc.ProductLines[i].ProductType == ProductType.PT_PACKAGE)
+                {
+                    for (int j = 0; j <= activeSaleDoc.ProductLines[i].SubProducts.Count - 1; j++)
+                    {
+                        nestedContractDoc.ProductLines[i].SubProducts.AddNew();
+
+                        nestedContractDoc.ProductLines[i].SubProducts[j].ParentId = activeSaleDoc.Id;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].ProductType = activeSaleDoc.ProductLines[i].SubProducts[j].ProductType;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].PriceListId = activeSaleDoc.ProductLines[i].SubProducts[j].PriceListId;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].ProductId = activeSaleDoc.ProductLines[i].SubProducts[j].ProductId;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].Quantity = activeSaleDoc.ProductLines[i].SubProducts[j].Quantity;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].Price = activeSaleDoc.ProductLines[i].SubProducts[j].Price;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].DiscountPercent = (float)activeSaleDoc.ProductLines[i].SubProducts[j].DiscountPercent;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].DiscountValue = activeSaleDoc.ProductLines[i].SubProducts[j].DiscountValue;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].TotalPrice = activeSaleDoc.ProductLines[i].SubProducts[j].TotalPrice;
+                        nestedContractDoc.ProductLines[i].SubProducts[j].PayoutValue = activeSaleDoc.ProductLines[i].SubProducts[j].PayoutValue;
+
+                        nestedContractDoc.ProductLines[i].SubProducts.Add(nestedContractDoc.ProductLines[i].SubProducts[j]);
+                    }
+                    nestedContractDoc.ProductLines.Add(nestedContractDoc.ProductLines[i]);
+                }
+            }
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+

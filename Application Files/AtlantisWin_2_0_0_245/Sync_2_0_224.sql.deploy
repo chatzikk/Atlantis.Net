@@ -1,0 +1,286 @@
+﻿
+CREATE TABLE [dbo].[QSTPersonQuestionnaireItems](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[QuestionnaireId] [int] NULL,
+	[QuestionId] [int] NULL,
+	[AnswerId] [int] NULL,
+	[AnswerText] [varchar](max) NULL,
+	[AnswerValue] [tinyint] NULL,
+	[QuestionType] [tinyint] NULL,
+ CONSTRAINT [PK_QSTQuestionaireItems] PRIMARY KEY NONCLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 95) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+
+CREATE TABLE [dbo].[QSTPersonQuestionnaires](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[QuestionnaireId] [int] NULL,
+	[CustId] [int] NULL,
+	[CustAlias] [nvarchar](50) NULL,
+	[ExtraId] [int] NULL,
+	[Date1] [smalldatetime] NULL,
+	[Date2] [smalldatetime] NULL,
+	[Extra1] [nvarchar](10) NULL,
+	[CreationDate] [smalldatetime] NULL,
+	[Notes] [nvarchar](255) NULL,
+	[Nationality] [varchar](50) NULL,
+ CONSTRAINT [PK_QSTQuestionaires] PRIMARY KEY NONCLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 95) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+CREATE TABLE [dbo].[QSTQuestionnaireHeaders](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[CaptionId] [int] NULL,
+	[Description] [nvarchar](150) NULL,
+	[LineOrder] [smallint] NULL,
+	[QuestionnaireId] [int] NULL,
+ CONSTRAINT [PK_QSTQuestionHeaders] PRIMARY KEY NONCLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 95) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+
+CREATE TABLE [dbo].[QSTQuestionnaireQuestionAnswers](
+	[Id] [int] NOT NULL,
+	[QuestionId] [int] NULL,
+	[CaptionId] [int] NULL,
+	[Description] [varchar](150) NULL,
+	[RequiresCustomText] [bit] NULL,
+	[IsActive] [bit] NULL,
+	[LineOrder] [tinyint] NULL,
+	[Value] [tinyint] NULL,
+	[IsDefault] [bit] NULL,
+	[QuestionType] [tinyint] NULL,
+ CONSTRAINT [PK_QSTQuestionAnswers] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+CREATE TABLE [dbo].[QSTQuestionnaireQuestions](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[HeaderId] [int] NULL,
+	[CaptionId] [int] NULL,
+	[Description] [varchar](150) NULL,
+	[QuestionType] [tinyint] NULL,
+	[IsActive] [bit] NULL,
+	[LineOrder] [tinyint] NULL,
+ CONSTRAINT [PK_QSTQuestions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+CREATE TABLE [dbo].[QSTQuestionnaires](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Description] [varchar](150) NULL,
+	[IsActive] [bit] NULL,
+	[CreationDateTime] [datetime] NULL,
+	[CreationUserId] [int] NULL,
+	[LastUpdateDateTime] [datetime] NULL,
+	[LastUpdateUserId] [int] NULL,
+	[QuestionnaireType] [tinyint] NULL,
+ CONSTRAINT [PK_QSTQuestionnaires] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+CREATE TABLE [dbo].[ControlCaptions](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Description] [varchar](150) NULL,
+ CONSTRAINT [PK_ControlCaptions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE TABLE [dbo].[Languages](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Description] [varchar](50) NULL,
+	[Alias] [varchar](5) NULL,
+ CONSTRAINT [PK_Languages] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE TABLE [dbo].[LanguageCaptions](
+	[LanguageId] [int] NOT NULL,
+	[CaptionId] [int] NOT NULL,
+	[Description] [varchar](150) NULL,
+ CONSTRAINT [PK_LanguageCaptions] PRIMARY KEY CLUSTERED 
+(
+	[LanguageId] ASC,
+	[CaptionId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE Individuals	Add IndvLanguageId int
+go
+update Individuals set IndvLanguageId=0
+go
+
+drop view v_CustIndividuals
+go
+
+CREATE VIEW [dbo].[v_CustIndividuals]
+AS
+SELECT        dbo.Customers.CustID, dbo.Customers.CustAlias, dbo.Customers.CustType, dbo.Customers.CustParentId, dbo.Customers.JobID, dbo.Jobs.JobDescr, dbo.Customers.NatnID, dbo.Nationalities.NatnDescr, 
+                         dbo.Customers.SelectionKey, dbo.Customers.CustGLCode, dbo.Individuals.IndvSurname, dbo.Individuals.IndvName, dbo.Individuals.IndvFather, dbo.Individuals.IndvBirthPlace, dbo.Individuals.IndvBirthDate, 
+                         dbo.Individuals.IndvAddress, dbo.Individuals.IndvTown, dbo.Individuals.IndvState, dbo.Individuals.IndvZip, dbo.Individuals.CntrId, Nationalities_1.NatnDescr AS CntrDescr, dbo.Individuals.IndvPhone1, 
+                         dbo.Individuals.IndvPhone2, dbo.Individuals.IndvMobilePhone, dbo.Individuals.IndvFax, dbo.Individuals.IndvMale, dbo.Individuals.IndvADT, dbo.Individuals.IndvAFM, dbo.Individuals.IndvDOY, 
+                         dbo.Individuals.CuTPId, dbo.Individuals.IndvMedFile, dbo.Individuals.IndvEmail, dbo.Individuals.IndvHttp, dbo.Individuals.IndvLastUpdate, dbo.Customers.CustNotes, dbo.Individuals.IndvWeight, 
+                         dbo.Individuals.IndvHeight, dbo.Individuals.IndvPhotoFile, dbo.Individuals.IndvPhoto, dbo.Individuals.IndvLanguageId
+FROM            dbo.Customers INNER JOIN
+                         dbo.Individuals ON dbo.Customers.CustID = dbo.Individuals.CustId LEFT OUTER JOIN
+                         dbo.Nationalities AS Nationalities_1 ON dbo.Individuals.CntrId = Nationalities_1.NatnID LEFT OUTER JOIN
+                         dbo.Nationalities ON dbo.Customers.NatnID = dbo.Nationalities.NatnID LEFT OUTER JOIN
+                         dbo.Jobs ON dbo.Customers.JobID = dbo.Jobs.JobID
+
+GO
+
+Alter Table SaleTypes add IsHidden bit
+go
+Update SaleTypes set IsHidden=0
+go
+
+drop view v_Charges
+go
+drop view v_ReservationPlan
+go
+drop view v_CuFlProducts
+go
+
+CREATE VIEW [dbo].[v_Charges]
+AS
+SELECT        CHRG1.ChrgID, CHRG1.ChrgDate, CHRG1.ChrgTime, CHRG1.ChrgIssuedDate, CHRG1.ChrgIssuedTime, CHRG1.UserId, CHRG1.ChrgQuantity, CHRG1.ProdId, PRD2.ProdDescr, PRD2.ProdType, CHRG1.ChrgVAT, 
+                         CHRG1.ChrgDiscount, CHRG1.ChrgIntPayerId, CHRG1.ChrgArr, INDV1.IndvSurname, INDV1.IndvName, CHRG1.InvID, CHRG1.ParId, CHRG1.ChrgSaleTypeId, ST1.Description, CHRG1.ChrgDeptId, 
+                         CHRG1.ChrgPaymentTypeId, PT1.Description AS PaymentTypeDescr, CHRG1.ChrgAccDeptId, CHRG1.ChrgState, CHRG1.ChrgType, CHRG1.ChrgPrice, CHRG1.ChrgConCuFlId, CF1.CustId, CHRG1.CFPrId, 
+                         CFP1.LeaderId, RESC1.RescDescr, ST1.IsMaison AS IsMaisonDebit, PT1.IsMaison AS IsMaisonCredit, INDV1.IndvPhone1, INDV1.IndvPhone2, INDV1.IndvMobilePhone, PRD1.ProdDescr AS CuFlProdDescr, 
+                         CF1.CuFlType,
+                             (SELECT        SUM(CFP2.CFPrQuantity * CFP2.CFPrPrice - CFP2.CFPrDiscountValue - CFP2.CFPrTotalPaid) AS PayoutBalance
+                               FROM            dbo.CuFlProducts AS CFP2 INNER JOIN
+                                                         dbo.Products AS PRD2 ON CFP2.ProdId = PRD2.ProdID LEFT OUTER JOIN
+                                                         dbo.SaleTypes AS ST2 ON CFP2.SaleTypeId = ST2.ID
+                               WHERE        (CFP2.CFPrState >= 5) AND (ST2.IsMaison = 0) AND (CFP2.CuFlId = CF1.CuFlId) AND (PRD2.ProdType <> 3)
+                               GROUP BY CFP2.CuFlId) AS PayoutBalance, CF1.CuFlAlias, PRD2.ProdDuration, CHRG1.ProdType AS ChrgProdType, MONTH(CHRG1.ChrgDate) AS ChrgMonth, YEAR(CHRG1.ChrgDate) AS ChrgYear, 
+                         CFP1.CFPrCreationDate, MONTH(CFP1.CFPrCreationDate) AS CfprCreationMonth, YEAR(CFP1.CFPrCreationDate) AS CfprCreationYear, PRD1.RescID AS ProdDeptId, ORG1.Description AS ProdDeptDescr, 
+                         PRD1.ProdType AS CFPrProdType, CHRG1.ChrgDiscountValue, CFP1.SCListId, dbo.SaleContactLists.CampaignId, dbo.POS.Description AS DeptDescr, CF1.HtlAlias, ST1.IsHidden
+FROM            dbo.OrganizationChart AS ORG1 RIGHT OUTER JOIN
+                         dbo.Products AS PRD1 ON ORG1.Id = PRD1.RescID RIGHT OUTER JOIN
+                         dbo.CuFlProducts AS CFP1 LEFT OUTER JOIN
+                         dbo.SaleContactLists ON CFP1.SCListId = dbo.SaleContactLists.Id RIGHT OUTER JOIN
+                         dbo.POS RIGHT OUTER JOIN
+                         dbo.CustFolders AS CF1 INNER JOIN
+                         dbo.Charges AS CHRG1 ON CF1.CuFlId = CHRG1.ChrgConCuFlId ON dbo.POS.Id = CHRG1.ChrgDeptId ON CFP1.CFPrId = CHRG1.CFPrId ON PRD1.ProdID = CFP1.ProdId LEFT OUTER JOIN
+                         dbo.Resources AS RESC1 ON CFP1.LeaderId = RESC1.RescID LEFT OUTER JOIN
+                         dbo.Individuals AS INDV1 ON CF1.CustId = INDV1.CustId LEFT OUTER JOIN
+                         dbo.PaymentTypes AS PT1 ON CHRG1.ChrgPaymentTypeId = PT1.Id LEFT OUTER JOIN
+                         dbo.SaleTypes AS ST1 ON CHRG1.ChrgSaleTypeId = ST1.ID LEFT OUTER JOIN
+                         dbo.Products AS PRD2 ON CHRG1.ProdId = PRD2.ProdID
+
+GO
+
+
+
+CREATE VIEW [dbo].[v_CuFlProducts]
+AS
+SELECT        dbo.CuFlProducts.CFPrId, dbo.CuFlProducts.CuFlId, dbo.CustFolders.CuFlAlias, dbo.CuFlProducts.ProdId, dbo.Products.ProdDescr, dbo.Products.ProdType, dbo.Products.RescID AS ProdDeptId, 
+                         dbo.OrganizationChart.Description AS ProdDeptDescr, dbo.CuFlProducts.PlID, dbo.PriceLists.PLDescr, dbo.CuFlProducts.BkPrId, dbo.Bookings.BknName, dbo.CuFlProducts.CFPrState, 
+                         dbo.CuFlProducts.CFPrStartDate, dbo.CuFlProducts.CFPrEndDate, dbo.CuFlProducts.CFPrQuantity, dbo.CuFlProducts.CFPrDiscountPrcnt, dbo.CuFlProducts.CFPrArrangement, dbo.CuFlProducts.CFPrPayerType, 
+                         dbo.CuFlProducts.PrmtID, dbo.CuFlProducts.CFPrKey, dbo.CuFlProducts.CFPrCancelledDate, dbo.CuFlProducts.CFPrStoppedDate, dbo.CuFlProducts.CFPrCreationDate, dbo.CuFlProducts.CFPrNotes, 
+                         dbo.CuFlProducts.CFPrChargeMethod, dbo.CuFlProducts.CFPrMaxTreatments, dbo.CuFlProducts.CFPrActualTreatments, dbo.CuFlProducts.CFPrChargedTreatments, dbo.CuFlProducts.CFPrValidDuration, 
+                         dbo.CuFlProducts.CFPrFinancialState, dbo.CuFlProducts.CFPrContractState, dbo.CuFlProducts.ECHId, dbo.CuFlProducts.SaleTypeId, dbo.SaleTypes.Description AS SaleTypeDescr, dbo.CuFlProducts.CFPrPrice, 
+                         dbo.CuFlProducts.CFPrTotalCharged, dbo.CuFlProducts.AssistantId, Assistant.RescDescr AS AssistantDescr, dbo.CuFlProducts.LeaderId, Leader.RescDescr AS LeaderDescr, dbo.CuFlProducts.CFPrLastUpdate, 
+                         dbo.CuFlProducts.CFPrTotalPaid, dbo.CustFolders.CustId, dbo.SaleTypes.IsMaison, dbo.Individuals.IndvSurname, dbo.Individuals.IndvName, dbo.Individuals.IndvFather, dbo.Individuals.IndvPhone1, 
+                         dbo.Individuals.IndvPhone2, dbo.Individuals.IndvMobilePhone, dbo.Individuals.IndvEmail, dbo.CustFolders.CuFlPrepayDate, dbo.CuFlProducts.CFPrQuantity * dbo.CuFlProducts.CFPrPrice AS TotalValue, 
+                         dbo.CuFlProducts.CFPrDiscountValue, dbo.CuFlProducts.CFPrQuantity * dbo.CuFlProducts.CFPrPrice - dbo.CuFlProducts.CFPrDiscountValue AS Payout, 
+                         dbo.CuFlProducts.CFPrQuantity * dbo.CuFlProducts.CFPrPrice - dbo.CuFlProducts.CFPrDiscountValue - dbo.CuFlProducts.CFPrTotalPaid AS PayoutBalance, dbo.Bookings.BknID, dbo.CuFlProducts.prmt2id, 
+                         MONTH(dbo.CuFlProducts.CFPrCreationDate) AS CFPrCreationMonth, YEAR(dbo.CuFlProducts.CFPrCreationDate) AS CFPrCreationYear, dbo.CustFolders.CuFlStatus, dbo.CuFlProducts.CFPrFreezeStartDate, 
+                         dbo.CuFlProducts.CFPrFreezeEndDate, dbo.CuFlProducts.SCListId, dbo.SaleContactLists.CampaignId, dbo.Products.PrimaryVAT, dbo.SaleTypes.IsHidden
+FROM            dbo.Bookings RIGHT OUTER JOIN
+                         dbo.BookingProducts ON dbo.Bookings.BknID = dbo.BookingProducts.BkCuID RIGHT OUTER JOIN
+                         dbo.SaleContactLists RIGHT OUTER JOIN
+                         dbo.CustFolders INNER JOIN
+                         dbo.Individuals ON dbo.CustFolders.CustId = dbo.Individuals.CustId INNER JOIN
+                         dbo.CuFlProducts INNER JOIN
+                         dbo.Products ON dbo.CuFlProducts.ProdId = dbo.Products.ProdID ON dbo.CustFolders.CuFlId = dbo.CuFlProducts.CuFlId ON dbo.SaleContactLists.Id = dbo.CuFlProducts.SCListId ON 
+                         dbo.BookingProducts.BkPrID = dbo.CuFlProducts.BkPrId LEFT OUTER JOIN
+                         dbo.OrganizationChart ON dbo.Products.RescID = dbo.OrganizationChart.Id LEFT OUTER JOIN
+                         dbo.Resources AS Assistant ON dbo.CuFlProducts.AssistantId = Assistant.RescID LEFT OUTER JOIN
+                         dbo.Resources AS Leader ON dbo.CuFlProducts.LeaderId = Leader.RescID LEFT OUTER JOIN
+                         dbo.PriceLists ON dbo.CuFlProducts.PlID = dbo.PriceLists.Id LEFT OUTER JOIN
+                         dbo.SaleTypes ON dbo.CuFlProducts.SaleTypeId = dbo.SaleTypes.ID
+
+GO
+
+
+CREATE VIEW [dbo].[v_ReservationPlan]
+AS
+SELECT        dbo.ReservationPlan.RPlID, dbo.ReservationPlan.CFPrID, dbo.CuFlProducts.ProdId, dbo.Products.ProdDescr, dbo.Products.ProdType, dbo.ReservationPlan.CuFlId, dbo.CustFolders.CustId, 
+                         dbo.CustFolders.CuFlAlias, dbo.Individuals.IndvSurname, dbo.Individuals.IndvName, dbo.ReservationPlan.RescId1, Resources_3.RescDescr AS CabinDescr, dbo.ReservationPlan.RescId2, 
+                         Resources_1.RescDescr AS HumanDescr, dbo.ReservationPlan.RescId3, Resources_2.RescDescr AS MachDescr, OrganizationChart_1.Description, dbo.ReservationPlan.RPlValidStartTime, 
+                         dbo.ReservationPlan.RPlValidEndTime, dbo.ReservationPlan.RPlValidStartInterval, dbo.ReservationPlan.RPlDate, dbo.ReservationPlan.RPlOrder, dbo.ReservationPlan.ProdId AS THRId, 
+                         Products_1.ProdDescr AS THRDescription, dbo.ReservationPlan.RPlDuration, dbo.ReservationPlan.RPlBreakTime, dbo.ReservationPlan.ChrgId, dbo.ReservationPlan.RplChargeDate, 
+                         dbo.ReservationPlan.ChrgAccountingId, dbo.ReservationPlan.ChrgCostId, dbo.ReservationPlan.ChrgIncomeId, dbo.ReservationPlan.RplStoppedDate, dbo.ReservationPlan.RplCancelledDate, 
+                         dbo.ReservationPlan.RplStExtra1, dbo.ReservationPlan.RplStExtra2, dbo.ReservationPlan.RPlState, dbo.ReservationPlan.RplOperationalState, dbo.ReservationPlan.RplFinancialState, 
+                         dbo.ReservationPlan.RPlDateSerial, dbo.ReservationPlan.RPlStartTimeSerial, dbo.ReservationPlan.RPlEndTimeSerial, dbo.ReservationPlan.RPlLastUpdateDate, dbo.ReservationPlan.RplPrice, 
+                         dbo.ReservationPlan.RplCreationDate, dbo.ReservationPlan.RPlCreationUserId, dbo.ReservationPlan.RPlLastUpdateUserId, dbo.ReservationPlan.RPlCancelledUserId, dbo.Individuals.IndvPhone1, 
+                         dbo.Individuals.IndvPhone2, dbo.Individuals.IndvMobilePhone, dbo.Individuals.IndvFather, dbo.ReservationPlan.Notes, dbo.ReservationPlan.RGId1, dbo.ReservationPlan.RGId2, dbo.ReservationPlan.RGId3, 
+                         dbo.ReservationPlan.DayOrder, dbo.CuFlProducts.SaleTypeId, dbo.SaleTypes.IsMaison, Resources_4.RescDescr AS CreationUserDescription, dbo.Resources.RescDescr AS LastUpdateUserDescription, 
+                         dbo.CuFlProducts.CFPrPrice, dbo.CustFolders.CuFlType, Resources_3.RescBackColor AS Resc1BackColor, Resources_1.RescBackColor AS Resc2BackColor, Resources_2.RescBackColor AS Resc3BackColor, 
+                         OrganizationChart_1.Id AS DeptId, dbo.SaleTypes.Description AS SaleTypeDescr, Resources_1.RescParent AS Resc2DeptId, dbo.OrganizationChart.Description AS Resc2DeptDescr, 
+                         dbo.SaleTypes.IsHidden
+FROM            dbo.OrganizationChart RIGHT OUTER JOIN
+                         dbo.Resources AS Resources_1 ON dbo.OrganizationChart.Id = Resources_1.RescParent RIGHT OUTER JOIN
+                         dbo.Resources AS Resources_4 RIGHT OUTER JOIN
+                         dbo.SaleTypes INNER JOIN
+                         dbo.Individuals INNER JOIN
+                         dbo.ReservationPlan INNER JOIN
+                         dbo.CustFolders ON dbo.ReservationPlan.CuFlId = dbo.CustFolders.CuFlId INNER JOIN
+                         dbo.CuFlProducts ON dbo.ReservationPlan.CFPrID = dbo.CuFlProducts.CFPrId INNER JOIN
+                         dbo.Products ON dbo.CuFlProducts.ProdId = dbo.Products.ProdID INNER JOIN
+                         dbo.Products AS Products_1 ON dbo.ReservationPlan.ProdId = Products_1.ProdID ON dbo.Individuals.CustId = dbo.CustFolders.CustId ON dbo.SaleTypes.ID = dbo.CuFlProducts.SaleTypeId LEFT OUTER JOIN
+                         dbo.OrganizationChart AS OrganizationChart_1 ON Products_1.RescID = OrganizationChart_1.Id ON Resources_4.RescID = dbo.ReservationPlan.RPlCreationUserId LEFT OUTER JOIN
+                         dbo.Resources ON dbo.ReservationPlan.RPlLastUpdateUserId = dbo.Resources.RescID LEFT OUTER JOIN
+                         dbo.Resources AS Resources_2 ON dbo.ReservationPlan.RescId3 = Resources_2.RescID ON Resources_1.RescID = dbo.ReservationPlan.RescId2 LEFT OUTER JOIN
+                         dbo.Resources AS Resources_3 ON dbo.ReservationPlan.RescId1 = Resources_3.RescID
+
+GO
+
+CREATE VIEW [dbo].[v_Invoices]
+AS
+SELECT        dbo.Invoice.*, dbo.SaleTypes.IsHidden
+FROM            dbo.Invoice LEFT OUTER JOIN
+                         dbo.SaleTypes ON dbo.Invoice.SaleTypeId = dbo.SaleTypes.ID
+
+GO

@@ -1,0 +1,28 @@
+﻿Changes to Version 2.0.0.152
+1. Partial block activation
+2. Cut-Paste Appointment in appointment tooltip
+3. Copy-Paste Appointment in appointment tooltip
+4. Change PMS Details in charge selection step
+5. Tooltip in Scheduled customers and search customers list
+6. Δυνατότητα sorting της σειράς εμφάνισης των στηλών στο workbench
+
+Changes to Version 2.0.0.154
+1. Default Working Shifts (InSpa Time - Marked Time - Available Time)
+2. Resource Working Schedule 
+3. Appointment Resize in Workbench
+4. Tooltip activation when the cursor is over the image of the appointment
+
+Changes to Version 2.0.0.155
+1. Ενεργοποίηση default PMS Connect από tooltip appointment
+2. Button Open στη φόρμα Charges Select για άνοιγμα συμφωνίας
+3. Αυτόματη αλλαγή του τύπου πελάτη από external σε inhouse από τη στιγμή που θα συνδεθεί με δωμάτιο
+4. Προσθήκη View Menu στο appointment tooltip
+5. Δίορθωση του προβλήματος μη πλήρους εμφάνισης του tooltip όταν το ραντεβού είναι στα όρια της φόρμας σύμφωνα με email εκκρεμοτήτων.
+6. Το workbench ξεκινάει από της 07.00 και να τελειώνει στης 22.30 σύμφωνα με email εκκρεμοτήτων.
+7. Διόρθωση της δυσλειτουργίας στην αλλαγή τιμής οικονομικής συμφωνίας με τιμοκατάλογο που δεν επιτρέπει αλλαγές τιμών
+8. Στη φόρμα προγραμματισμού ραντεβού έχει ενεργοποιηθεί το μενού Προβολή
+
+Changes to Version 2.0.0.156
+1. Διόρθωση στο bug στη μεταβολή τιμής της οικονομικής συμφωνίας
+2. Δημιουργία φόρμας Resource Availability Entries
+3. Δημιουργία φόρμας Revenue Statistics

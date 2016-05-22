@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <configSections>
+        <sectionGroup name="applicationSettings" type="System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+            <section name="AtlantisWin.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+        </sectionGroup>
+    </configSections>
+    <connectionStrings />
+    <applicationSettings>
+        <AtlantisWin.Properties.Settings>
+            <setting name="ApplicationName" serializeAs="String">
+                <value>AtlantisWin</value>
+            </setting>
+        </AtlantisWin.Properties.Settings>
+    </applicationSettings>
+     <appSettings>
+    <add key="ApplicationName" value="AtlantisWin" />
+    <add key="CslaPropertyChangedMode" value="Windows" />
+    <add key="DalManagerType" value="Atlantis.DataAccess.SQL.DalManager,Atlantis.DataAccess.SQL" />
+    <!--<add key="CslaDataPortalProxy" value="Csla.DataPortalClient.WcfProxy, Csla" />-->
+    <add key="PMSDebitsTable" value="spa_Invoice" />
+    <add key="PMSDebitItemsTable" value="spa_InvoiceItems" />
+    <add key="PMSRoomPlanTable" value="spa_RoomPlan" />
+
+
+  </appSettings>
+  <system.serviceModel>
+    <serviceHostingEnvironment minFreeMemoryPercentageToActivateService="0" />
+    <bindings>
+        <wsHttpBinding>
+          <binding name="wsHttpBinding_IWcfPortal" closeTimeout="00:10:00" openTimeout="00:10:00" sendTimeout="00:10:00" maxReceivedMessageSize="2147483647" maxBufferPoolSize="2147483647" messageEncoding="Text">
+          <readerQuotas maxDepth="2147483647" maxStringContentLength="2147483647" maxArrayLength="2147483647" maxBytesPerRead="2147483647" maxNameTableCharCount="2147483647" />
+          </binding>
+        </wsHttpBinding>
+        <basicHttpBinding>
+          <binding name="BasicHttpBinding_IWcfPortal"  closeTimeout="00:10:00" openTimeout="00:10:00" sendTimeout="00:10:00" maxReceivedMessageSize="2147483647" maxBufferPoolSize="2147483647" messageEncoding="Text">
+          <readerQuotas maxDepth="2147483647" maxStringContentLength="2147483647" maxArrayLength="2147483647" maxBytesPerRead="2147483647" maxNameTableCharCount="2147483647" />
+          </binding>
+        </basicHttpBinding>
+    </bindings>
+
+  <client>
+      <!--<endpoint name="WcfDataPortal" address="http://oak1vv.static.otenet.gr:21647/IISHost/wcfportal.svc" binding= "basicHttpBinding"  contract="Csla.Server.Hosts.IWcfPortal"/>-->
+    <!--<endpoint name="WcfDataPortal" address="http://companyweb/AtlantisIISHost/wcfportal.svc" binding= "basicHttpBinding"  contract="Csla.Server.Hosts.IWcfPortal"/>-->
+    <!--<endpoint name="WcfDataPortal" address="http://localhost:80/AtlantisIISHost/WcfPortal.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IWcfPortal"  contract="Csla.Server.Hosts.IWcfPortal"/>-->
+      <!--<endpoint name="WcfDataPortal" address="http://oak1vv.static.otenet.gr:21647/IISHost/wcfportal.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IWcfPortal" contract="Csla.Server.Hosts.IWcfPortal" />-->
+      <!--<endpoint name="WcfDataPortal" address="http://185.25.21.212/AtlantisIISHost/wcfportal.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IWcfPortal" contract="Csla.Server.Hosts.IWcfPortal" />-->
+      <!--<endpoint name="WcfDataPortal" address="http://79.129.119.44:8383/wcfportal.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IWcfPortal" contract="Csla.Server.Hosts.IWcfPortal" />-->
+      <endpoint name="WcfDataPortal" address="http://192.168.1.3:8383/wcfportal.svc" binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IWcfPortal" contract="Csla.Server.Hosts.IWcfPortal" />
+      <!--<endpoint name="WcfDataPortal" address="http://192.168.1.3:21647/IISHost/WcfPortal.svc" binding="basicHttpBinding" contract="Csla.Server.Hosts.IWcfPortal" />-->
+    </client>
+  </system.serviceModel>
+  
+<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0" /></startup>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="System.Runtime" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-2.6.10.0" newVersion="2.6.10.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Threading.Tasks" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-2.6.10.0" newVersion="2.6.10.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="System.Net.Http" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-2.2.29.0" newVersion="2.2.29.0" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Csla" publicKeyToken="93be5fdc093e4c30" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-4.6.100.0" newVersion="4.6.100.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>

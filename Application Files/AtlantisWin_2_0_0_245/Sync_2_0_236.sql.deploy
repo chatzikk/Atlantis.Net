@@ -1,0 +1,15 @@
+﻿DROP VIEW [dbo].[v_InvoiceTypes]
+GO
+
+
+CREATE VIEW [dbo].[v_InvoiceTypes]
+AS
+SELECT        dbo.InvDocTypes.Id, dbo.DocumentTypes.Description, dbo.DocumentTypes.Alias, dbo.DocumentTypes.AcceptsCancellation, dbo.DocumentTypes.MaxDaysForCancellation, 
+                         dbo.DocumentTypes.CancellationDocId, dbo.InvDocTypes.OrdinalNumber, dbo.InvDocTypes.ReportId, dbo.ReportTemplates.ClassName AS ReportClassName, 
+                         dbo.ReportTemplates.AssemblyName AS ReportAssemblyName, dbo.ReportTemplates.Url AS ReportUrl, dbo.ReportTemplates.Buffer AS ReportBuffer, dbo.DocumentTypes.CreditDocId
+FROM            dbo.DocumentTypes INNER JOIN
+                         dbo.InvDocTypes ON dbo.DocumentTypes.ID = dbo.InvDocTypes.DocTypeId LEFT OUTER JOIN
+                         dbo.ReportTemplates ON dbo.InvDocTypes.ReportId = dbo.ReportTemplates.Id
+
+GO
+
